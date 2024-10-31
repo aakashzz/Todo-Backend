@@ -23,7 +23,7 @@ model User {
   fullName       String
   email          String        @unique
   password       String
-  profilePicture String
+  profilePicture String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   refreshToken   String?
