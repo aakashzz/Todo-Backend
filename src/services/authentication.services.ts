@@ -12,7 +12,7 @@ export async function isPasswordCheck(
 }
 
 //generate access and refreshToken
-function generateAccessAndRefreshToken(email: string, id: number) {
+function generateAccessAndRefreshToken(email: string, id: string) {
    const accessToken = JWT.sign(
       {
          id: id,
@@ -94,45 +94,41 @@ export async function loginAccountService(email: string, password: string) {
       if (!isPasswordCorrect)
          throw new ApiError(400, "Password Is Not Correct Please Check");
 
-      const {accessToken,refreshToken} = generateAccessAndRefreshToken(existedUser.email,existedUser.id);
-      
+      const { accessToken, refreshToken } = generateAccessAndRefreshToken(
+         existedUser.email,
+         existedUser.id
+      );
+
       existedUser.refreshToken = refreshToken;
 
       await prisma.user.update({
          where: { email: email },
          data: { refreshToken: existedUser.refreshToken },
-       });
-      
-       return {accessToken,refreshToken}
+      });
 
-
+      return { accessToken, refreshToken };
    } catch (error: any) {
       console.log("Error: ", error);
-      return new ApiError(
-         501,
-         "Something Have Error in Login Account",
-         error
-      );
+      return new ApiError(501, "Something Have Error in Login Account", error);
    }
 }
 
 //logout service
-export async function  logoutAccountService(id:number) {
-      try {
-      const removeToken = await prisma.user.update({where:{
-         id:id,
-      },data:{
-         refreshToken: null
-      }})
+export async function logoutAccountService(id: string) {
+   try {
+      const removeToken = await prisma.user.update({
+         where: {
+            id: id,
+         },
+         data: {
+            refreshToken: null,
+         },
+      });
 
-      console.log("remove user",removeToken)
-         return removeToken
-      } catch (error:any) {
-         console.log("Error: ", error);
-         return new ApiError(
-            501,
-            "Something Have Error in Logout ",
-            error
-         );
-      }
+      console.log("remove user", removeToken);
+      return removeToken;
+   } catch (error: any) {
+      console.log("Error: ", error);
+      return new ApiError(501, "Something Have Error in Logout ", error);
+   }
 }

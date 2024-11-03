@@ -10,7 +10,6 @@ import { Request, Response } from "express";
 import { optionsOfCookie } from "../constant";
 import { AuthRequest } from "../middlewares/authorize.middleware";
 
-
 const singUpController = asyncHandler(async (req: Request, res: Response) => {
    const { fullName, email, password } = req.body;
 
@@ -53,24 +52,37 @@ const loginController = asyncHandler(async (req: Request, res: Response) => {
    }
 });
 
-const logoutController = asyncHandler(async (req: AuthRequest, res: Response) => {
-   const id = req.user?.id;
+const logoutController = asyncHandler(
+   async (req: AuthRequest, res: Response) => {
+      const id = req.user?.id;
 
-   const removeToken = await logoutAccountService(id!);
+      const removeToken = await logoutAccountService(id!);
 
-   return res
-      .status(200)
-      .clearCookie("accessToken")
-      .clearCookie("refreshToken")
-      .json(
-         new ApiResponse(200, removeToken, "User Account Logout SuccessFully")
-      );
-});
+      return res
+         .status(200)
+         .clearCookie("accessToken")
+         .clearCookie("refreshToken")
+         .json(
+            new ApiResponse(
+               200,
+               removeToken,
+               "User Account Logout SuccessFully"
+            )
+         );
+   }
+);
 
-const getUserController = asyncHandler(async (req:AuthRequest,res:Response)=>{
-   return res.status(200).json(
-      new ApiResponse(200,req.user,"Get User SuccessFully")
-   )
-})
+const getUserController = asyncHandler(
+   async (req: AuthRequest, res: Response) => {
+      return res
+         .status(200)
+         .json(new ApiResponse(200, req.user, "Get User SuccessFully"));
+   }
+);
 
-export { singUpController, loginController,logoutController,getUserController };
+export {
+   singUpController,
+   loginController,
+   logoutController,
+   getUserController,
+};
