@@ -35,7 +35,7 @@ model Todo {
   title     String
   subTodos  SubTodo[] @relation("SubTodos")
   createdBy User      @relation(fields: [userId], references: [id])
-  userId    String      
+  userId    String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -43,7 +43,7 @@ model Todo {
 model SubTodo {
   id        String        @id @default(uuid())
   content   String
-  todoId    String       
+  todoId    String
   todo      Todo          @relation("SubTodos", fields: [todoId], references: [id])
   status    SubTodoStatus @default(panding)
   createdAt DateTime      @default(now())
